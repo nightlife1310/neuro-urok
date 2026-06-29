@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>НЕЙРО · 3 направления дизайна — выбери облик сайта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:#0c0e16;color:#e8eaf2;line-height:1.5;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(900px 600px at 8% -6%,rgba(99,102,241,.14),transparent 60%),radial-gradient(800px 600px at 100% 0,rgba(236,72,153,.10),transparent 55%)}
+.page{max-width:1180px;margin:0 auto;padding:40px clamp(16px,4vw,34px) 90px}
+
+/* ---- intro ---- */
+.intro{margin-bottom:46px;max-width:760px}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#7dd3fc;margin-bottom:14px}
+.intro h1{font-family:'Unbounded',sans-serif;font-size:clamp(28px,5vw,46px);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin-bottom:16px}
+.intro h1 .g{background:linear-gradient(100deg,#5eead4,#a78bfa,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro p{color:#a8adc4;font-size:clamp(15px,2.4vw,17px);max-width:64ch}
+.intro p b{color:#e8eaf2;font-weight:600}
+
+/* ---- option block ---- */
+.opt{margin-bottom:64px}
+.opt-head{display:flex;align-items:flex-start;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.opt-badge{flex:0 0 auto;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;
+  font-family:'Unbounded',sans-serif;font-weight:800;font-size:26px;color:#0c0e16}
+.opt-meta{flex:1;min-width:260px}
+.opt-meta .name{font-family:'Unbounded',sans-serif;font-weight:700;font-size:clamp(19px,3vw,25px);margin-bottom:5px}
+.opt-meta .desc{color:#a8adc4;font-size:14.5px;max-width:70ch;line-height:1.5}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;padding:5px 11px;border-radius:99px;
+  border:1px solid rgba(255,255,255,.14);color:#c7ccdf;background:rgba(255,255,255,.04)}
+
+/* ---- browser frame ---- */
+.frame{border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 90px -40px rgba(0,0,0,.8)}
+.frame-bar{display:flex;align-items:center;gap:8px;padding:11px 15px;background:#181b26;border-bottom:1px solid rgba(255,255,255,.07)}
+.frame-bar .dots{display:flex;gap:6px}
+.frame-bar .dots i{width:11px;height:11px;border-radius:50%;display:block}
+.frame-bar .url{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#7e8398;
+  background:rgba(255,255,255,.05);border-radius:7px;padding:5px 12px;max-width:340px;margin:0 auto}
+.screen{position:relative;min-height:460px;overflow:hidden}
+
+/* the foot note */
+.why{display:flex;gap:11px;align-items:flex-start;margin-top:16px;font-size:13.5px;color:#9ea3bb;line-height:1.5}
+.why b{color:#cfd3e6;font-weight:600}
+.why .pin{flex:0 0 auto;margin-top:1px}
+
+/* ============================================================
+   A · НЕЙРО-ЛАБ  (dark / living neural net / neon)
+============================================================ */
+.A{font-family:'Inter',sans-serif;color:#eef0ff;background:linear-gradient(165deg,#1a1248,#0d0826)}
+.A .net{position:absolute;inset:0;z-index:0}
+.A .ui{position:relative;z-index:2;padding:20px clamp(18px,4vw,40px) 30px}
+.A .hud{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+.A .logo{display:flex;align-items:center;gap:9px;font-family:'Unbounded',sans-serif;font-weight:800;font-size:16px}
+.A .logo .m{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#5eead4,#a78bfa);display:grid;place-items:center;color:#0d0826;font-size:16px}
+.A .sp{flex:1}
+.A .pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);
+  padding:7px 13px;border-radius:99px;font-weight:700;font-size:12.5px}
+.A .pill .d{width:8px;height:8px;border-radius:50%;background:#fbbf24;box-shadow:0 0 10px #fbbf24}
+.A .pill b{color:#fbbf24}
+.A .steps{display:flex;gap:6px;height:5px;margin-bottom:30px}
+.A .steps i{flex:1;border-radius:99px;background:rgba(255,255,255,.1)}
+.A .steps i.on{background:linear-gradient(90deg,#5eead4,#f472b6)}
+.A .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#5eead4;margin-bottom:12px}
+.A h2{font-family:'Unbounded',sans-serif;font-weight:800;font-size:clamp(26px,4.4vw,40px);line-height:1.06;letter-spacing:-.02em;margin-bottom:14px;max-width:14ch}
+.A h2 .g{background:linear-gradient(100deg,#5eead4,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.A .lede{color:#b9bce6;font-size:15px;max-width:42ch;margin-bottom:24px;line-height:1.5}
+.A .cards{display:flex;gap:11px;flex-wrap:wrap}
+.A .dcard{display:inline-flex;align-items:center;gap:9px;background:#fbf7ff;color:#241a40;border-radius:13px;padding:12px 15px;
+  font-weight:600;font-size:13.5px;box-shadow:0 14px 30px -12px rgba(0,0,0,.6)}
+.A .dcard .e{font-size:18px}
+.A .cta{margin-top:26px;display:inline-flex;align-items:center;gap:9px;font-family:'Unbounded',sans-serif;font-weight:700;font-size:15px;
+  color:#06222a;background:#5eead4;border-radius:14px;padding:14px 26px;box-shadow:0 8px 0 #14a89a,0 18px 30px -12px rgba(94,234,212,.5)}
+
+/* ============================================================
+   B · СТУДИЯ  (light / comic-sticker / friendly)
+============================================================ */
+.B{font-family:'Nunito',sans-serif;color:#2b2a3a;background:#fdf6ec;
+  background-image:radial-gradient(700px 420px at 90% -10%,rgba(123,110,240,.12),transparent 60%),radial-gradient(600px 400px at -5% 110%,rgba(35,178,160,.12),transparent 60%)}
+.B .ui{position:relative;z-index:2;padding:20px clamp(18px,4vw,40px) 30px}
+.B .hud{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.B .logo{display:flex;align-items:center;gap:9px;font-family:'Baloo 2',cursive;font-weight:800;font-size:18px;color:#2b2a3a}
+.B .logo .m{width:34px;height:34px;border-radius:11px;background:#7b6ef0;display:grid;place-items:center;color:#fff;font-size:18px;border:2px solid #2b2a3a;box-shadow:3px 3px 0 #2b2a3a}
+.B .sp{flex:1}
+.B .pill{display:flex;align-items:center;gap:7px;background:#fff;border:2px solid #2b2a3a;box-shadow:3px 3px 0 #2b2a3a;
+  padding:7px 14px;border-radius:99px;font-weight:800;font-size:13px;color:#2b2a3a}
+.B .pill .d{width:9px;height:9px;border-radius:50%;background:#f5b13c}
+.B .pill b{color:#e3902a}
+.B .steps{display:flex;gap:7px;height:9px;margin-bottom:26px}
+.B .steps i{flex:1;border-radius:99px;background:#e7ded0;border:1.5px solid #2b2a3a}
+.B .steps i.on{background:#23b2a0}
+.B .row{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:center}
+@media(max-width:680px){.B .row{grid-template-columns:1fr}}
+.B .eyebrow{font-family:'Baloo 2',cursive;font-weight:700;font-size:13px;letter-spacing:.02em;color:#7b6ef0;margin-bottom:8px}
+.B h2{font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(27px,4.4vw,42px);line-height:1.04;margin-bottom:12px;color:#2b2a3a}
+.B h2 .hl{background:#f5b13c;padding:0 8px;border-radius:8px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.B .lede{color:#6c697b;font-size:15.5px;max-width:36ch;margin-bottom:20px;font-weight:600}
+.B .cards{display:flex;gap:10px;flex-wrap:wrap}
+.B .dcard{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#2b2a3a;border-radius:14px;padding:11px 14px;
+  font-weight:700;font-size:13.5px;border:2px solid #2b2a3a;box-shadow:3px 3px 0 #2b2a3a}
+.B .dcard .e{font-size:18px}
+.B .cta{margin-top:24px;display:inline-flex;align-items:center;gap:9px;font-family:'Baloo 2',cursive;font-weight:800;font-size:16px;
+  color:#fff;background:#fb7c66;border:2.5px solid #2b2a3a;border-radius:16px;padding:13px 26px;box-shadow:4px 4px 0 #2b2a3a}
+.B .mascot{justify-self:center}
+.B .mascot svg{width:min(220px,60vw);height:auto;filter:drop-shadow(6px 8px 0 rgba(43,42,58,.18))}
+
+/* ============================================================
+   C · АРКАДА  (retro pixel / arcade / scanlines)
+============================================================ */
+.C{font-family:'VT323',monospace;color:#d6f8e8;background:#0a0f12;position:relative}
+.C::after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+.C .grid{position:absolute;inset:0;z-index:0;opacity:.5;
+  background-image:linear-gradient(rgba(34,197,94,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,.10) 1px,transparent 1px);
+  background-size:26px 26px;mask-image:linear-gradient(to bottom,transparent,#000 40%,#000 70%,transparent)}
+.C .ui{position:relative;z-index:2;padding:22px clamp(18px,4vw,40px) 30px}
+.C .hud{display:flex;align-items:center;gap:14px;margin-bottom:26px;font-family:'Press Start 2P',monospace}
+.C .logo{display:flex;align-items:center;gap:10px;font-size:13px;color:#fde047;text-shadow:2px 2px 0 #b45309}
+.C .logo .m{width:26px;height:26px;background:#22c55e;display:grid;place-items:center;color:#06210f;font-size:13px;
+  box-shadow:0 0 0 3px #0a0f12,0 0 0 5px #22c55e}
+.C .sp{flex:1}
+.C .stat{font-family:'Press Start 2P',monospace;font-size:10px;color:#5eead4}
+.C .stat b{color:#fde047}
+.C .lives{font-size:13px;letter-spacing:2px}
+.C .steps{display:flex;gap:5px;height:14px;margin-bottom:30px}
+.C .steps i{flex:1;background:#10241a;border:2px solid #14532d}
+.C .steps i.on{background:#22c55e;box-shadow:inset 0 0 0 2px #052e16}
+.C .eyebrow{font-family:'Press Start 2P',monospace;font-size:10px;letter-spacing:.06em;color:#22c55e;margin-bottom:18px}
+.C .blink{animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.C h2{font-family:'Press Start 2P',monospace;font-size:clamp(18px,3.2vw,30px);line-height:1.5;color:#fde047;
+  text-shadow:3px 3px 0 #b45309;margin-bottom:22px;max-width:18ch}
+.C .lede{font-size:21px;color:#9fe9c8;max-width:40ch;margin-bottom:24px;line-height:1.15}
+.C .cards{display:flex;gap:12px;flex-wrap:wrap}
+.C .dcard{display:inline-flex;align-items:center;gap:9px;background:#0e1a14;color:#d6f8e8;padding:12px 15px;font-size:19px;
+  border:2px solid #22c55e;box-shadow:4px 4px 0 #064e2b}
+.C .dcard .e{font-size:19px;font-family:'Inter',sans-serif}
+.C .cta{margin-top:28px;display:inline-flex;align-items:center;gap:10px;font-family:'Press Start 2P',monospace;font-size:13px;
+  color:#06210f;background:#fde047;padding:16px 26px;box-shadow:5px 5px 0 #a16207;text-shadow:none}
+
+/* chooser bar */
+.chooser{position:sticky;bottom:0;z-index:30;margin-top:30px;background:rgba(16,18,28,.92);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:18px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.chooser .q{font-family:'Unbounded',sans-serif;font-weight:700;font-size:15px;flex:1;min-width:200px}
+.chooser .opts2{display:flex;gap:10px;flex-wrap:wrap}
+.chooser button{font-family:'Unbounded',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;border:none;
+  padding:12px 20px;border-radius:12px;color:#0c0e16;transition:transform .1s}
+.chooser button:hover{transform:translateY(-2px)}
+.cA{background:#5eead4}.cB{background:#fb7c66;color:#fff}.cC{background:#fde047}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#1f2330;
+  border:1px solid rgba(255,255,255,.16);padding:14px 22px;border-radius:14px;font-weight:600;font-size:14px;opacity:0;
+  transition:.3s;z-index:60;box-shadow:0 20px 50px -16px rgba(0,0,0,.7);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="intro">
+    <div class="kicker">шаг 0 · выбор облика</div>
+    <h1>Три облика для <span class="g">«НЕЙРО»</span></h1>
+    <p>Один и тот же экран Урока&nbsp;1 — «Что такое ИИ» — собран в трёх характерах. Контент и механика заданий везде одинаковые, отличается <b>настроение и подача</b>. Полистай, пощёлкай (вариант&nbsp;A живой), и внизу выбери, в каком собираем весь курс.</p>
+  </div>
+
+  <!-- ============ A ============ -->
+  <div class="opt">
+    <div class="opt-head">
+      <div class="opt-badge" style="background:linear-gradient(135deg,#5eead4,#a78bfa)">A</div>
+      <div class="opt-meta">
+        <div class="name">Нейро-Лаб</div>
+        <div class="desc">Тёмный космос с живой нейросетью на фоне — узлы реально шевелятся и вспыхивают. Неон, премиальный «вау»-эффект, ощущение игры уровня приложения. Главный визуальный крючок курса.</div>
+        <div class="tags"><span class="tag">тёмная</span><span class="tag">живой canvas-фон</span><span class="tag">неон</span><span class="tag">«вау» для 14-17</span></div>
+      </div>
+    </div>
+    <div class="frame">
+      <div class="frame-bar"><span class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span><span class="url">neuro.ai/урок-1</span></div>
+      <div class="screen A">
+        <canvas class="net" id="netA"></canvas>
+        <div class="ui">
+          <div class="hud">
+            <div class="logo"><span class="m">◆</span>НЕЙРО</div>
+            <div class="sp"></div>
+            <div class="pill"><span class="d"></span><b>120</b>&nbsp;XP</div>
+          </div>
+          <div class="steps"><i class="on"></i><i></i><i></i></div>
+          <div class="eyebrow">урок 1 · что такое ии</div>
+          <h2>Собери свой <span class="g">ИИ</span></h2>
+          <p class="lede">Без скучных лекций. Двигай, собирай, разбирайся — и запусти собственный ИИ прямо на ноуте.</p>
+          <div class="cards">
+            <div class="dcard"><span class="e">💬</span>чат-бот</div>
+            <div class="dcard"><span class="e">🎬</span>рекомендации</div>
+            <div class="dcard"><span class="e">🔢</span>калькулятор</div>
+          </div>
+          <div class="cta">Начать задание →</div>
+        </div>
+      </div>
+    </div>
+    <div class="why"><span class="pin">✦</span><span><b>Когда выбрать:</b> хочешь максимальный «вау» и чтобы сайт ощущался как игра/приложение. Лучше всего заходит подросткам постарше. Это развитие твоей доски выбора визуала.</span></div>
+  </div>
+
+  <!-- ============ B ============ -->
+  <div class="opt">
+    <div class="opt-head">
+      <div class="opt-badge" style="background:#fb7c66;color:#fff">B</div>
+      <div class="opt-meta">
+        <div class="name">Студия</div>
+        <div class="desc">Светлый, дружелюбный комикс-стиль: жирные контуры, «стикерные» тени, тёплая бумага, крупный робот-маскот. Не давит, легко читается, ощущается безопасно и весело.</div>
+        <div class="tags"><span class="tag">светлая</span><span class="tag">комикс / стикеры</span><span class="tag">маскот</span><span class="tag">дружелюбно для 12-14</span></div>
+      </div>
+    </div>
+    <div class="frame">
+      <div class="frame-bar"><span class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span><span class="url">neuro.ai/урок-1</span></div>
+      <div class="screen B">
+        <div class="ui">
+          <div class="hud">
+            <div class="logo"><span class="m">●</span>НЕЙРО</div>
+            <div class="sp"></div>
+            <div class="pill"><span class="d"></span><b>120</b>&nbsp;XP</div>
+          </div>
+          <div class="steps"><i class="on"></i><i></i><i></i></div>
+          <div class="row">
+            <div>
+              <div class="eyebrow">★ урок 1 — что такое ии</div>
+              <h2>Собери свой <span class="hl">ИИ</span></h2>
+              <p class="lede">Двигай, собирай, разбирайся — и запусти собственный ИИ прямо на ноуте.</p>
+              <div class="cards">
+                <div class="dcard"><span class="e">💬</span>чат-бот</div>
+                <div class="dcard"><span class="e">🎬</span>ролики</div>
+                <div class="dcard"><span class="e">🔢</span>калькулятор</div>
+              </div>
+              <div class="cta">Поехали →</div>
+            </div>
+            <div class="mascot">
+              <svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg">
+                <line x1="100" y1="34" x2="100" y2="14" stroke="#2b2a3a" stroke-width="5"/>
+                <circle cx="100" cy="10" r="8" fill="#f5b13c" stroke="#2b2a3a" stroke-width="4"/>
+                <rect x="34" y="34" width="132" height="104" rx="30" fill="#fff" stroke="#2b2a3a" stroke-width="5"/>
+                <rect x="50" y="56" width="100" height="60" rx="18" fill="#23b2a0" stroke="#2b2a3a" stroke-width="4"/>
+                <circle cx="80" cy="86" r="11" fill="#fff"/><circle cx="120" cy="86" r="11" fill="#fff"/>
+                <circle cx="82" cy="88" r="5" fill="#2b2a3a"/><circle cx="122" cy="88" r="5" fill="#2b2a3a"/>
+                <path d="M82 104 q18 12 36 0" stroke="#2b2a3a" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <rect x="58" y="138" width="84" height="56" rx="20" fill="#7b6ef0" stroke="#2b2a3a" stroke-width="5"/>
+                <rect x="20" y="150" width="30" height="14" rx="7" fill="#fb7c66" stroke="#2b2a3a" stroke-width="4"/>
+                <rect x="150" y="150" width="30" height="14" rx="7" fill="#fb7c66" stroke="#2b2a3a" stroke-width="4"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="why"><span class="pin">✦</span><span><b>Когда выбрать:</b> класс помладше или хочешь, чтобы ИИ не пугал, а казался добрым помощником. Светлая тема комфортнее на проекторе и при ярком свете в классе.</span></div>
+  </div>
+
+  <!-- ============ C ============ -->
+  <div class="opt">
+    <div class="opt-head">
+      <div class="opt-badge" style="background:#fde047">C</div>
+      <div class="opt-meta">
+        <div class="name">Аркада</div>
+        <div class="desc">Ретро-игровой автомат: пиксельный шрифт, скан-линии, сетка, «жизни» и SCORE вместо обычного прогресса. Учёба превращается в прохождение игры — каждый урок это уровень.</div>
+        <div class="tags"><span class="tag">8-бит / аркада</span><span class="tag">скан-линии</span><span class="tag">жизни + score</span><span class="tag">геймеры</span></div>
+      </div>
+    </div>
+    <div class="frame">
+      <div class="frame-bar"><span class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span><span class="url">neuro.ai/level-1</span></div>
+      <div class="screen C">
+        <div class="grid"></div>
+        <div class="ui">
+          <div class="hud">
+            <div class="logo"><span class="m">▣</span>NEURO</div>
+            <div class="sp"></div>
+            <div class="stat">SCORE <b>00120</b></div>
+            <div class="lives" title="жизни">❤❤❤</div>
+          </div>
+          <div class="steps"><i class="on"></i><i></i><i></i></div>
+          <div class="eyebrow">LEVEL 1 — WHAT IS AI</div>
+          <h2>СОБЕРИ<br>СВОЙ ИИ</h2>
+          <p class="lede">Двигай, собирай, разбирайся — и запусти свой ИИ прямо на ноуте. <span class="blink">_</span></p>
+          <div class="cards">
+            <div class="dcard"><span class="e">💬</span>ЧАТ-БОТ</div>
+            <div class="dcard"><span class="e">🎬</span>РОЛИКИ</div>
+            <div class="dcard"><span class="e">🔢</span>КАЛЬК.</div>
+          </div>
+          <div class="cta">PRESS START ▶</div>
+        </div>
+      </div>
+    </div>
+    <div class="why"><span class="pin">✦</span><span><b>Когда выбрать:</b> упор на «это игра, а не урок». Очень цепляет геймеров, отлично работает с механикой жизней/счёта. Минус — пиксельный шрифт читается тяжелее, длинные тексты придётся давать обычным шрифтом.</span></div>
+  </div>
+
+  <!-- chooser -->
+  <div class="chooser">
+    <div class="q">Какой облик собираем для всего курса?</div>
+    <div class="opts2">
+      <button class="cA" onclick="pick('A — Нейро-Лаб')">Вариант A</button>
+      <button class="cB" onclick="pick('B — Студия')">Вариант B</button>
+      <button class="cC" onclick="pick('C — Аркада')">Вариант C</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---- toast ---- */
+const toast=document.getElementById('toast');
+function pick(name){
+  toast.textContent='Выбран облик «'+name+'». Напиши мне это в чат — и я соберу в нём весь Урок 1 ✦';
+  toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),4200);
+}
+
+/* ---- living neural net for variant A ---- */
+const cv=document.getElementById('netA'),ctx=cv.getContext('2d');
+let W,H,DPR,nodes=[];
+const COLORS=['#5eead4','#a78bfa','#f472b6'];
+function size(){DPR=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+function init(){size();nodes=[];const n=Math.round(W*H/16000);
+  for(let i=0;i<n;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,r:1.6+Math.random()*2.2,act:0,c:COLORS[i%3],ph:Math.random()*6.3});}
+let MAXD=150,last=0;
+function fire(nd,s,hop){nd.act=Math.max(nd.act,s);if(hop<=0)return;nodes.forEach(o=>{if(o!==nd&&Math.hypot(o.x-nd.x,o.y-nd.y)<MAXD)setTimeout(()=>fire(o,s*.62,hop-1),80);});}
+function loop(t){
+  if(!W){requestAnimationFrame(loop);return;}
+  ctx.clearRect(0,0,W,H);
+  if(t-last>1500){last=t;fire(nodes[Math.random()*nodes.length|0],1,3);}
+  for(const nd of nodes){nd.x+=nd.vx;nd.y+=nd.vy;if(nd.x<4||nd.x>W-4)nd.vx*=-1;if(nd.y<4||nd.y>H-4)nd.vy*=-1;nd.act*=.955;}
+  for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){const a=nodes[i],b=nodes[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+    if(d<MAXD){const al=1-d/MAXD,act=Math.max(a.act,b.act);
+      ctx.strokeStyle=act>.15?`rgba(244,114,182,${.22+act*.5})`:`rgba(167,139,250,${al*.14})`;
+      ctx.lineWidth=act>.15?1.3:.6;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+  for(const nd of nodes){const R=nd.r*(1+Math.sin(t/620+nd.ph)*.18)+nd.act*4;
+    if(nd.act>.1){ctx.beginPath();ctx.arc(nd.x,nd.y,R+6,0,6.3);ctx.fillStyle=`rgba(244,114,182,${nd.act*.16})`;ctx.fill();}
+    ctx.beginPath();ctx.arc(nd.x,nd.y,R,0,6.3);ctx.fillStyle=nd.act>.1?'#fff7ad':nd.c;ctx.globalAlpha=.55+nd.act*.45;ctx.fill();ctx.globalAlpha=1;}
+  requestAnimationFrame(loop);
+}
+const screenA=document.querySelector('.screen.A');
+screenA.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();
+  let near=nodes[0],min=1e9;for(const nd of nodes){const d=Math.hypot(nd.x-(e.clientX-r.left),nd.y-(e.clientY-r.top));if(d<min){min=d;near=nd;}}
+  if(near)fire(near,1,3);});
+function boot(){init();requestAnimationFrame(loop);}
+addEventListener('resize',()=>{init();});
+if(document.readyState==='complete')boot();else addEventListener('load',boot);
+setTimeout(boot,300);
+</script>
+</body>
+</html>

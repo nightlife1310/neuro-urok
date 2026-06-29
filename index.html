@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta http-equiv="Cache-Control" content="no-store" />
+<title>НЕЙРО · Урок 1 — Что такое ИИ</title>
+<link rel="stylesheet" href="styles.css?v=7" />
+</head>
+<body>
+
+<canvas id="bgnet"></canvas>
+
+<div class="app">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="brand" onclick="go('hero')">
+      <span class="m">◆</span><span>НЕЙРО</span>
+    </div>
+    <div class="hud-sp"></div>
+    <div class="lvl-pill">ур.&nbsp;<b id="lvl">1</b></div>
+    <div class="xp-pill"><span class="d"></span><b id="xp">0</b>&nbsp;XP</div>
+    <button class="tbtn" id="muteBtn" onclick="toggleSound()" title="Звук вкл/выкл">🔊</button>
+    <button class="tbtn" id="teachBtn" onclick="openTeacher()" title="Вход для учителя">🔑</button>
+  </div>
+  <div class="xpbar" id="xpbar"><i></i></div>
+
+  <!-- step dots (only during a mission) -->
+  <div class="stepbar hidden" id="stepbar"></div>
+
+  <div class="stage">
+
+    <!-- ============ HERO ============ -->
+    <section class="screen show" data-screen="hero">
+      <div class="hero">
+        <div class="core">
+          <svg viewBox="0 0 160 160" width="160" height="160">
+            <defs>
+              <radialGradient id="hg" cx="50%" cy="40%" r="62%">
+                <stop offset="0%" stop-color="#ffffff"/><stop offset="42%" stop-color="#5eead4"/>
+                <stop offset="100%" stop-color="#7c5cf0"/>
+              </radialGradient>
+              <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(94,234,212,.45)"/><stop offset="100%" stop-color="rgba(94,234,212,0)"/>
+              </radialGradient>
+            </defs>
+            <circle cx="80" cy="80" r="70" fill="url(#halo)"/>
+            <!-- orbit rings -->
+            <g fill="none" stroke="rgba(167,139,250,.5)" stroke-width="1.4">
+              <g><ellipse cx="80" cy="80" rx="64" ry="26"/>
+                <circle cx="144" cy="80" r="4" fill="#f472b6" stroke="none"/>
+                <animateTransform attributeName="transform" type="rotate" from="0 80 80" to="360 80 80" dur="9s" repeatCount="indefinite"/></g>
+              <g><ellipse cx="80" cy="80" rx="26" ry="64"/>
+                <circle cx="80" cy="16" r="4" fill="#5eead4" stroke="none"/>
+                <animateTransform attributeName="transform" type="rotate" from="120 80 80" to="480 80 80" dur="12s" repeatCount="indefinite"/></g>
+            </g>
+            <!-- nucleus -->
+            <circle cx="80" cy="80" r="38" fill="url(#hg)">
+              <animate attributeName="r" values="38;41;38" dur="3.4s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="80" cy="80" r="38" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
+            <!-- friendly face -->
+            <g fill="#160a30">
+              <circle cx="68" cy="76" r="5.5"/><circle cx="92" cy="76" r="5.5"/>
+              <circle cx="70" cy="74" r="1.7" fill="#fff"/><circle cx="94" cy="74" r="1.7" fill="#fff"/>
+              <path d="M68 92 q12 9 24 0" stroke="#160a30" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+        <div class="eyebrow">урок 1 · что такое ии · 12–17 лет</div>
+        <h1 id="hero-title">Собери свой <span class="grad">ИИ</span></h1>
+        <p class="lede" id="hero-lede"></p>
+        <div class="facts">
+          <div class="fact"><div class="ic">🧠</div><b>Понятно</b><span>ИИ простыми словами</span></div>
+          <div class="fact"><div class="ic">✋</div><b>Руками</b><span>всё трогаешь и собираешь</span></div>
+          <div class="fact"><div class="ic">⚡</div><b>Твой</b><span>ИИ на твоём ноуте</span></div>
+        </div>
+        <div class="actions"><button class="btn" onclick="startCourse()">Открыть карту →</button></div>
+        <div class="hint">Учитель? Нажми 🔑 вверху справа.</div>
+      </div>
+    </section>
+
+    <!-- ============ MAP ============ -->
+    <section class="screen" data-screen="map">
+      <div class="map">
+        <h2 id="map-title">Урок 1. Что такое ИИ</h2>
+        <p class="sub" id="map-sub"></p>
+        <div class="path" id="path"></div>
+        <div class="actions" id="finishBar" style="margin-top:24px;display:none">
+          <button class="btn pink" onclick="showResult()">Финал и бейдж →</button>
+        </div>
+        <div class="actions" style="margin-top:14px">
+          <button class="btn ghost" onclick="restart()">Сбросить прогресс</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INTRO (слайды-теория) ============ -->
+    <section class="screen" data-screen="intro">
+      <div class="slide">
+        <div class="teach-note" id="intro-teach" style="display:none"></div>
+        <div class="intro-dots" id="intro-dots"></div>
+        <div class="intro-viz" id="intro-viz"></div>
+        <div class="eyebrow" id="intro-eyebrow"></div>
+        <h2 class="slide-title" id="intro-title"></h2>
+        <p class="slide-body" id="intro-body"></p>
+        <div class="intro-points" id="intro-points"></div>
+        <div class="actions">
+          <button class="btn ghost" id="intro-back" onclick="introBack()">← К карте</button>
+          <button class="btn" id="intro-next" onclick="introNext()">Дальше →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TASK (универсальный) ============ -->
+    <section class="screen" data-screen="task">
+      <div class="q-head">
+        <span class="q-step" id="q-step"></span>
+        <h2 id="q-title"></h2>
+        <p id="q-prompt"></p>
+      </div>
+      <div class="teach-note" id="task-teach" style="display:none"></div>
+      <div class="task-lead" id="task-lead" style="display:none"></div>
+      <div id="taskbody"></div>
+      <div class="banner" id="task-banner"></div>
+      <div class="task-recap" id="task-recap" style="display:none"></div>
+      <div class="actions" id="task-actions"></div>
+      <div class="hint" id="task-hint"></div>
+      <div class="actions" style="margin-top:18px">
+        <button class="btn ghost" onclick="buildMap()" style="font-size:13px;padding:10px 18px">← К карте</button>
+      </div>
+    </section>
+
+    <!-- ============ RESULT ============ -->
+    <section class="screen" data-screen="result">
+      <div class="result">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 200 200" width="200" height="200">
+            <circle cx="100" cy="100" r="86" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="16"/>
+            <circle id="ring" cx="100" cy="100" r="86" fill="none" stroke="url(#rg)" stroke-width="16"
+              stroke-linecap="round" transform="rotate(-90 100 100)" stroke-dasharray="540" stroke-dashoffset="540"/>
+            <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#5eead4"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs>
+          </svg>
+          <div class="ring-num"><b id="pct">0%</b><span>урок пройден</span></div>
+        </div>
+        <div class="stars" id="stars">☆☆☆</div>
+        <h2 id="res-title">Урок пройден!</h2>
+        <p class="sub" id="res-sub"></p>
+        <div class="badge-won">
+          <div class="bic" id="res-badge-ic">🔬</div>
+          <div class="bname" id="res-badge-name"></div>
+          <div class="bxp" id="res-xp"></div>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="buildMap()">К карте курса →</button>
+          <button class="btn ghost" onclick="restart()">Пройти заново</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- mascot -->
+<div class="mascot-say" id="mascotSay"></div>
+<svg class="mascot-fab" id="mascotFab" viewBox="0 0 48 48" onclick="mascot('Я — Нейро, твой помощник. Жми по заданиям и собирай XP! ✦',4000)">
+  <rect x="9" y="14" width="30" height="24" rx="9" fill="#fbf7ff" stroke="#5eead4" stroke-width="2"/>
+  <circle cx="19" cy="26" r="3.4" fill="#241a40"/><circle cx="29" cy="26" r="3.4" fill="#241a40"/>
+  <circle cx="20.1" cy="25" r="1" fill="#fff"/><circle cx="30.1" cy="25" r="1" fill="#fff"/>
+  <rect x="20" y="32" width="8" height="2.4" rx="1.2" fill="#f472b6"/>
+  <line x1="24" y1="14" x2="24" y2="7" stroke="#5eead4" stroke-width="2"/>
+  <circle cx="24" cy="6" r="2.6" fill="#fbbf24"/>
+</svg>
+
+<!-- teacher overlay -->
+<div class="tov" id="tov">
+  <div class="tov-card tov-lock" id="tovLock" style="position:relative">
+    <button class="tov-close" onclick="closeTeacher()">×</button>
+    <div class="lic">🔑</div>
+    <h2>Вход для учителя</h2>
+    <div class="tov-sub">Методичка: что рассказывать на каждом задании, тайминг и ключи ответов.</div>
+    <input type="password" id="tovPass" placeholder="Пароль" onkeydown="if(event.key==='Enter')tryTeacher()" />
+    <div class="tov-err" id="tovErr"></div>
+    <button class="btn" onclick="tryTeacher()">Войти</button>
+  </div>
+  <div class="tov-card" id="tovPanel" style="position:relative;display:none"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js?v=5"></script>
+<script src="illustrations.js?v=4"></script>
+<script src="demos.js?v=4"></script>
+<script src="sound.js?v=2"></script>
+<script src="app.js?v=7"></script>
+</body>
+</html>
