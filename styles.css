@@ -278,6 +278,32 @@ body::after{width:54vw;height:54vw;bottom:-18vw;right:-14vw;background:radial-gr
 .spot-why{flex-basis:100%;margin-top:8px;font-size:12.5px;color:#9af0cd;line-height:1.4}
 .spot-claim.locked{cursor:default}
 
+/* ---------------- DECIDE (кейс-симулятор) ---------------- */
+.case-card{background:var(--s-bg);border:1px solid var(--s-bd);border-radius:18px;padding:18px;box-shadow:var(--s-hi),var(--s-sh)}
+.case-tag{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;
+  color:var(--violet);background:rgba(167,139,250,.14);border:1px solid rgba(167,139,250,.3);padding:4px 11px;border-radius:99px;margin-bottom:12px}
+.case-scenario{font-size:15px;line-height:1.55;color:var(--on);margin-bottom:14px}
+.case-q{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;margin-bottom:14px}
+.case-opts{display:flex;flex-direction:column;gap:10px}
+.case-opt{text-align:left;background:rgba(255,255,255,.04);border:1px solid var(--s-bd);border-radius:13px;padding:14px 16px;
+  cursor:pointer;font-size:14.5px;line-height:1.45;color:var(--on);font-family:inherit;transition:.15s}
+.case-opt:hover{border-color:var(--aqua);transform:translateX(3px)}
+.case-opt.correct{border-color:var(--good)!important;background:rgba(52,211,153,.12)}
+.case-opt.wrong{border-color:var(--bad)!important;background:rgba(251,113,133,.12)}
+.case-opts.locked .case-opt{cursor:default;transform:none}
+.case-outcome{margin-top:14px;border-radius:13px;padding:14px 16px;font-size:14px;line-height:1.55;animation:rise .3s}
+.case-outcome.ok{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:#bdf5dd}
+.case-outcome.no{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.4);color:#ffe7ad}
+
+/* ---------------- ESTIMATE (оцени масштаб) ---------------- */
+.est-q{text-align:center;font-weight:600;font-size:16px;margin-bottom:8px;line-height:1.45}
+.est-val{text-align:center;font-family:'Unbounded',sans-serif;font-weight:800;font-size:30px;color:var(--aqua);margin-bottom:14px}
+.est-reveal{margin-top:14px;border-radius:13px;padding:14px 16px;font-size:14px;line-height:1.6;animation:rise .3s}
+.est-reveal.ok{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4)}
+.est-reveal.mid{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.4)}
+.est-reveal .est-fact{margin-top:8px;color:var(--on-soft);font-size:13px}
+.multi-prompt{font-weight:600;font-size:14.5px;margin:4px 0 12px}
+
 /* ---------------- демо температуры ---------------- */
 .temp-demo{text-align:left}
 .temp-prompt{text-align:center;font-size:16px;margin-bottom:14px}

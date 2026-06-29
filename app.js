@@ -655,6 +655,77 @@ RENDER.spot=(task,body)=>{
   btn.disabled=true;
 };
 
+/* ---------------- DECIDE (кейс-симулятор: решение → последствие) ---------------- */
+RENDER.decide=(task,body)=>{
+  body.innerHTML=`<div class="case-card">
+    <div class="case-tag">📂 Кейс</div>
+    <div class="case-scenario">${task.scenario}</div>
+    <div class="case-q">${task.question}</div>
+    <div class="case-opts" id="caseOpts"></div>
+    <div class="case-outcome" id="caseOut" style="display:none"></div></div>`;
+  const opts=body.querySelector("#caseOpts"), out=body.querySelector("#caseOut");
+  task.options.forEach((o,i)=>{ const b=document.createElement("button"); b.className="case-opt"; b.innerHTML=o.t;
+    b.onclick=()=>{ if(opts.classList.contains("locked"))return; opts.classList.add("locked");
+      task.options.forEach((oo,j)=>{ const btn=opts.children[j]; if(oo.correct)btn.classList.add("correct"); if(j===i&&!oo.correct)btn.classList.add("wrong"); });
+      out.style.display=""; out.className="case-outcome "+(o.correct?"ok":"no");
+      out.innerHTML=`<b>${o.correct?"✅ Верно.":"❌ Не совсем."}</b> ${o.outcome}`;
+      gradeDone(task, o.correct?1:0, 1, {msg:o.correct?"Верное решение":"Разобрали последствие"});
+    };
+    opts.appendChild(b); });
+  $("#task-hint").textContent="Выбери решение — увидишь последствие.";
+};
+
+/* ---------------- ESTIMATE (оцени реальный масштаб, лог-ползунок) ---------------- */
+function fmtBig(n,unit){ let s; if(n>=1e12)s=(n/1e12).toFixed(n<1e13?1:0).replace(".0","")+" трлн";
+  else if(n>=1e9)s=Math.round(n/1e9)+" млрд"; else if(n>=1e6)s=Math.round(n/1e6)+" млн";
+  else if(n>=1e3)s=Math.round(n/1e3)+" тыс"; else s=Math.round(n); return s+(unit?" "+unit:""); }
+RENDER.estimate=(task,body)=>{
+  const min=task.min,max=task.max,actual=task.actual,unit=task.unit||"",factor=task.factor||3;
+  body.innerHTML=`<div class="panel">
+    <div class="est-q">${task.question}</div>
+    <div class="est-val" id="estVal"></div>
+    <div class="slider-row"><span class="sl-label">мало</span><input type="range" min="0" max="100" step="1" value="40" id="estSl"><span class="sl-label" style="text-align:right">очень много</span></div>
+    <div class="est-reveal" id="estReveal" style="display:none"></div></div>`;
+  const lnMin=Math.log(min),lnMax=Math.log(max);
+  const guess=()=>Math.exp(lnMin+(+body.querySelector("#estSl").value/100)*(lnMax-lnMin));
+  const valEl=body.querySelector("#estVal");
+  const upd=()=>valEl.textContent=fmtBig(guess(),unit);
+  body.querySelector("#estSl").addEventListener("input",upd); upd();
+  $("#task-hint").textContent="Поставь оценку и проверь — потом увидишь реальную цифру.";
+  const btn=checkButton("Проверить",()=>{
+    const g=guess(), close=g>=actual/factor && g<=actual*factor;
+    const rev=body.querySelector("#estReveal"); rev.style.display=""; rev.className="est-reveal "+(close?"ok":"mid");
+    rev.innerHTML=`<div>Твоя оценка: <b>${fmtBig(g,unit)}</b></div><div>Реально: <b style="color:var(--aqua)">${fmtBig(actual,unit)}</b></div><div class="est-fact">${task.fact}</div>`;
+    gradeDone(task,1,1,{participation:true,msg:close?"В точку — порядок величины верный!":"Теперь знаешь реальный масштаб"});
+  });
+  btn.disabled=false;
+};
+
+/* ---------------- MULTI (выбери все верные пункты / разбор) ---------------- */
+RENDER.multi=(task,body)=>{
+  body.innerHTML=`<div class="spot-card">
+    ${task.context?`<div class="spot-q">${task.context}</div>`:""}
+    ${task.aiLabel?`<div class="spot-ai">${task.aiLabel}</div>`:""}
+    ${task.prompt2?`<div class="multi-prompt">${task.prompt2}</div>`:""}
+    <div class="spot-claims" id="mOpts"></div></div>`;
+  const wrap=body.querySelector("#mOpts"); const sel=new Set();
+  task.options.forEach((o,i)=>{ const el=document.createElement("div"); el.className="spot-claim"; el.dataset.i=i;
+    el.innerHTML=`<span class="sc-dot"></span><span>${o.t}</span>`;
+    el.onclick=()=>{ if(wrap.classList.contains("locked"))return; el.classList.toggle("mark"); sel.has(i)?sel.delete(i):sel.add(i); btn.disabled=sel.size===0; };
+    wrap.appendChild(el); });
+  $("#task-hint").textContent="Отметь ВСЕ верные пункты и проверь.";
+  const btn=checkButton("Проверить",()=>{
+    wrap.classList.add("locked"); let correct=0,totalCorrect=0,wrong=0;
+    task.options.forEach((o,i)=>{ const el=wrap.querySelector(`[data-i="${i}"]`);
+      if(o.correct){ totalCorrect++; if(sel.has(i)){correct++;el.classList.add("good");} else el.classList.add("missed"); }
+      else if(sel.has(i)){ wrong++; el.classList.add("bad"); }
+      if(o.why) el.insertAdjacentHTML("beforeend",`<div class="spot-why">${o.why}</div>`);
+    });
+    gradeDone(task, Math.max(0,correct-wrong), totalCorrect, {msg:`Верно ${correct} из ${totalCorrect}${wrong?", лишних "+wrong:""}`});
+  });
+  btn.disabled=true;
+};
+
 /* ============================================================
    РЕЗУЛЬТАТ
 ============================================================ */
@@ -767,7 +838,7 @@ function buildTeacher(){
   });
   p.innerHTML=html;
 }
-function typeRu(t){ return {sort:"сортировка",axis:"шкала",order:"порядок",match:"пары",binary:"выбор",hotspot:"поиск",tokens:"токены",nextword:"вероятности",feed:"кормёжка сети",slider:"ползунок",train:"пульт · обучение",morph:"пульт · сигнал",generate:"пульт · генерация",spot:"поймай ошибку"}[t]||t; }
+function typeRu(t){ return {sort:"сортировка",axis:"шкала",order:"порядок",match:"пары",binary:"выбор",hotspot:"поиск",tokens:"токены",nextword:"вероятности",feed:"кормёжка сети",slider:"ползунок",train:"пульт · обучение",morph:"пульт · сигнал",generate:"пульт · генерация",spot:"поймай ошибку",decide:"кейс-решение",estimate:"оцени масштаб",multi:"разбор · мультивыбор"}[t]||t; }
 
 /* ---------------- режим учителя (встроенная памятка) ---------------- */
 let teacherMode=false;
