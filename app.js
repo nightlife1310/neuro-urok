@@ -656,10 +656,19 @@ RENDER.spot=(task,body)=>{
 };
 
 /* ---------------- DECIDE (кейс-симулятор: решение → последствие) ---------------- */
+function miniBars(chart){
+  if(!chart) return "";
+  const mx=Math.max(...chart.bars.map(b=>b.v));
+  const rows=chart.bars.map(b=>`<div class="db-row"><span class="db-l">${b.label}</span>
+    <span class="db-bar"><i style="width:${Math.max(4,Math.round(b.v/(chart.max||mx)*100))}%;background:${b.color||'#a78bfa'}"></i></span>
+    <span class="db-v">${b.v}${chart.suffix||"%"}</span></div>`).join("");
+  return `<div class="dchart">${chart.title?`<div class="dchart-t">${chart.title}</div>`:""}${rows}</div>`;
+}
 RENDER.decide=(task,body)=>{
   body.innerHTML=`<div class="case-card">
-    <div class="case-tag">📂 Кейс</div>
+    <div class="report-head">${task.tag||"кейс"} ${task.icon||"📂"}</div>
     <div class="case-scenario">${task.scenario}</div>
+    ${task.chart?miniBars(task.chart):""}
     <div class="case-q">${task.question}</div>
     <div class="case-opts" id="caseOpts"></div>
     <div class="case-outcome" id="caseOut" style="display:none"></div></div>`;
@@ -668,7 +677,7 @@ RENDER.decide=(task,body)=>{
     b.onclick=()=>{ if(opts.classList.contains("locked"))return; opts.classList.add("locked");
       task.options.forEach((oo,j)=>{ const btn=opts.children[j]; if(oo.correct)btn.classList.add("correct"); if(j===i&&!oo.correct)btn.classList.add("wrong"); });
       out.style.display=""; out.className="case-outcome "+(o.correct?"ok":"no");
-      out.innerHTML=`<b>${o.correct?"✅ Верно.":"❌ Не совсем."}</b> ${o.outcome}`;
+      out.innerHTML=`<b>${o.correct?"✅ Верно.":"❌ Не совсем."}</b> ${o.outcome}${miniBars(task.outcomeChart)}`;
       gradeDone(task, o.correct?1:0, 1, {msg:o.correct?"Верное решение":"Разобрали последствие"});
     };
     opts.appendChild(b); });
@@ -681,21 +690,30 @@ function fmtBig(n,unit){ let s; if(n>=1e12)s=(n/1e12).toFixed(n<1e13?1:0).replac
   else if(n>=1e3)s=Math.round(n/1e3)+" тыс"; else s=Math.round(n); return s+(unit?" "+unit:""); }
 RENDER.estimate=(task,body)=>{
   const min=task.min,max=task.max,actual=task.actual,unit=task.unit||"",factor=task.factor||3;
+  const lnMin=Math.log(min),lnMax=Math.log(max);
+  const pos=v=>Math.max(0,Math.min(100,(Math.log(v)-lnMin)/(lnMax-lnMin)*100));
+  const ticks=(task.ticks||[]).map(t=>`<span class="est-tick" style="left:${pos(t.v)}%">${t.label}</span>`).join("");
   body.innerHTML=`<div class="panel">
+    <div class="report-head">оценка масштаба</div>
     <div class="est-q">${task.question}</div>
     <div class="est-val" id="estVal"></div>
-    <div class="slider-row"><span class="sl-label">мало</span><input type="range" min="0" max="100" step="1" value="40" id="estSl"><span class="sl-label" style="text-align:right">очень много</span></div>
+    <input type="range" min="0" max="100" step="1" value="38" id="estSl" style="width:100%">
+    <div class="est-ruler">${ticks}</div>
     <div class="est-reveal" id="estReveal" style="display:none"></div></div>`;
-  const lnMin=Math.log(min),lnMax=Math.log(max);
   const guess=()=>Math.exp(lnMin+(+body.querySelector("#estSl").value/100)*(lnMax-lnMin));
   const valEl=body.querySelector("#estVal");
   const upd=()=>valEl.textContent=fmtBig(guess(),unit);
   body.querySelector("#estSl").addEventListener("input",upd); upd();
-  $("#task-hint").textContent="Поставь оценку и проверь — потом увидишь реальную цифру.";
+  $("#task-hint").textContent="Двигай по шкале (она логарифмическая) и проверь — увидишь реальную цифру и сравнение.";
   const btn=checkButton("Проверить",()=>{
     const g=guess(), close=g>=actual/factor && g<=actual*factor;
+    const rows=[{label:"Твоя оценка",value:g,color:"#a78bfa"},{label:"Реально",value:actual,color:"#5eead4"}]
+      .concat(task.compare||[]);
+    const bars=rows.map(c=>`<div class="cmp-row"><span class="cmp-l">${c.label}</span>
+      <span class="cmp-bar"><i style="width:${Math.max(3,Math.round(pos(c.value)))}%;background:${c.color||'#5f5e5a'}"></i></span>
+      <span class="cmp-v">${fmtBig(c.value,unit)}</span></div>`).join("");
     const rev=body.querySelector("#estReveal"); rev.style.display=""; rev.className="est-reveal "+(close?"ok":"mid");
-    rev.innerHTML=`<div>Твоя оценка: <b>${fmtBig(g,unit)}</b></div><div>Реально: <b style="color:var(--aqua)">${fmtBig(actual,unit)}</b></div><div class="est-fact">${task.fact}</div>`;
+    rev.innerHTML=`<div class="cmp">${bars}</div><div class="est-fact">${task.fact}</div>`;
     gradeDone(task,1,1,{participation:true,msg:close?"В точку — порядок величины верный!":"Теперь знаешь реальный масштаб"});
   });
   btn.disabled=false;
@@ -704,8 +722,9 @@ RENDER.estimate=(task,body)=>{
 /* ---------------- MULTI (выбери все верные пункты / разбор) ---------------- */
 RENDER.multi=(task,body)=>{
   body.innerHTML=`<div class="spot-card">
-    ${task.context?`<div class="spot-q">${task.context}</div>`:""}
-    ${task.aiLabel?`<div class="spot-ai">${task.aiLabel}</div>`:""}
+    <div class="report-head">разбор ответа</div>
+    ${task.context?`<div class="chat-user">${task.context}</div>`:""}
+    ${task.answer?`<div class="chat-ai"><span class="chat-av">🤖</span><div class="chat-bubble">${task.answer}</div></div>`:""}
     ${task.prompt2?`<div class="multi-prompt">${task.prompt2}</div>`:""}
     <div class="spot-claims" id="mOpts"></div></div>`;
   const wrap=body.querySelector("#mOpts"); const sel=new Set();
