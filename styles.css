@@ -241,6 +241,58 @@ body::after{width:54vw;height:54vw;bottom:-18vw;right:-14vw;background:radial-gr
 .task-recap .tr-head{font-family:'Unbounded',sans-serif;font-weight:700;font-size:14px;color:var(--violet);margin-bottom:6px}
 .task-recap p{font-size:13.5px;color:var(--on-soft);line-height:1.55}
 
+/* ---------------- хаб курса: карточки уроков ---------------- */
+.lessons-list{display:flex;flex-direction:column;gap:14px}
+.lesson-card{display:flex;align-items:center;gap:16px;background:var(--s-bg);border:1px solid var(--s-bd);border-radius:18px;
+  padding:18px 20px;cursor:pointer;box-shadow:var(--s-hi),var(--s-sh);transition:.2s;animation:rise .5s cubic-bezier(.16,.84,.28,1) backwards}
+.lesson-card:nth-child(2){animation-delay:.06s}
+.lesson-card:hover{transform:translateY(-3px);border-color:rgba(94,234,212,.4)}
+.lesson-card.locked{opacity:.5;cursor:not-allowed}
+.lesson-card .lc-num{flex:0 0 auto;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+  font-family:'Unbounded',sans-serif;font-weight:800;font-size:22px;background:linear-gradient(140deg,var(--aqua),var(--violet));color:var(--bg0)}
+.lesson-card .lc-body{flex:1;min-width:0}
+.lesson-card .lc-title{font-family:'Unbounded',sans-serif;font-weight:700;font-size:17px;margin-bottom:3px}
+.lesson-card .lc-sub{font-size:13px;color:var(--on-soft);line-height:1.4;margin-bottom:9px}
+.lesson-card .lc-bar{height:5px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:7px}
+.lesson-card .lc-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--aqua),var(--pink))}
+.lesson-card .lc-meta{font-size:11.5px;color:var(--on-dim)}
+.lesson-card .lc-side{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--aqua)}
+.lesson-card .lc-side .lc-ic{font-size:22px}
+.lesson-card .lc-side small{font-size:10.5px;color:var(--on-soft)}
+
+/* ---------------- SPOT (поймай галлюцинацию) ---------------- */
+.spot-card{background:var(--s-bg);border:1px solid var(--s-bd);border-radius:18px;padding:18px;box-shadow:var(--s-hi),var(--s-sh)}
+.spot-q{font-size:14px;color:var(--on-soft);margin-bottom:12px;font-style:italic}
+.spot-ai{font-family:'Unbounded',sans-serif;font-weight:700;font-size:13px;color:var(--aqua);margin-bottom:10px}
+.spot-claims{display:flex;flex-direction:column;gap:9px}
+.spot-claim{display:flex;gap:11px;align-items:flex-start;background:rgba(255,255,255,.04);border:1px solid var(--s-bd);
+  border-radius:12px;padding:12px 14px;cursor:pointer;font-size:14.5px;line-height:1.45;transition:.15s}
+.spot-claim:hover{border-color:var(--violet)}
+.spot-claim .sc-dot{flex:0 0 auto;width:14px;height:14px;border-radius:50%;border:2px solid var(--on-dim);margin-top:3px;transition:.15s}
+.spot-claim.mark{border-color:var(--gold);background:rgba(251,191,36,.1)}
+.spot-claim.mark .sc-dot{border-color:var(--gold);background:var(--gold)}
+.spot-claim.good{border-color:var(--good)!important;background:rgba(52,211,153,.12)}
+.spot-claim.good .sc-dot{border-color:var(--good);background:var(--good)}
+.spot-claim.bad{border-color:var(--bad)!important;background:rgba(251,113,133,.12)}
+.spot-claim.missed{border-color:var(--bad)!important;border-style:dashed}
+.spot-why{flex-basis:100%;margin-top:8px;font-size:12.5px;color:#9af0cd;line-height:1.4}
+.spot-claim.locked{cursor:default}
+
+/* ---------------- демо температуры ---------------- */
+.temp-demo{text-align:left}
+.temp-prompt{text-align:center;font-size:16px;margin-bottom:14px}
+.temp-prompt b{color:var(--aqua)}
+.temp-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.temp-bar{display:grid;grid-template-columns:96px 1fr 40px;align-items:center;gap:10px}
+.temp-bar .tb-w{font-size:13.5px;font-weight:600}
+.temp-bar .tb-track{height:18px;border-radius:7px;background:rgba(255,255,255,.07);overflow:hidden}
+.temp-bar .tb-track i{display:block;height:100%;border-radius:7px;background:linear-gradient(90deg,var(--aqua),var(--violet));transition:width .25s cubic-bezier(.2,.8,.2,1)}
+.temp-bar .tb-p{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--on-soft);text-align:right}
+.temp-bar.picked .tb-track i{background:linear-gradient(90deg,var(--gold),#f59e0b)}
+.temp-bar.picked .tb-w{color:var(--gold)}
+.temp-note{font-size:13px;font-weight:500;text-align:center;min-height:34px;margin-bottom:8px;line-height:1.4}
+@media(max-width:430px){.temp-bar{grid-template-columns:74px 1fr 34px;gap:7px}.temp-bar .tb-w{font-size:12px}}
+
 /* ---------------- task shell ---------------- */
 .q-head{margin-bottom:20px}
 .q-head .q-step{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:12px;color:var(--violet);

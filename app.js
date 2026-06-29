@@ -6,17 +6,24 @@ const TEACHER_PASSWORD = "neuro2026";   // ← пароль учителя, ме
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
-const L = window.LESSON;
 
-/* ---------------- состояние + сохранение ---------------- */
-const SAVE_KEY = "neuro_lesson1";
-const state = loadState();
+/* ---------------- уроки курса ---------------- */
+const LESSONS = [window.LESSON1, window.LESSON2].filter(Boolean);
+let L = null;          // текущий урок
+let curLesson = 0;
+
+/* ---------------- прогресс по всем урокам ---------------- */
+const SAVE_KEY = "neuro_progress_v2";
+let allProg = loadAll();
+let state = freshState();   // ссылка на прогресс текущего урока
 function freshState(){ return { xp:0, doneMissions:[], doneTasks:[], badge:false }; }
-function loadState(){
-  try{ const s = JSON.parse(localStorage.getItem(SAVE_KEY)); return s && s.xp!=null ? s : freshState(); }
-  catch(e){ return freshState(); }
+function loadAll(){ try{ return JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; }catch(e){ return {}; } }
+function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(allProg)); }catch(e){} }
+function loadLesson(i){
+  curLesson = i; L = LESSONS[i]; const id = "l"+L.id;
+  if(!allProg[id] || allProg[id].xp==null) allProg[id] = freshState();
+  state = allProg[id];
 }
-function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(state)); }catch(e){} }
 const has = (arr,id) => arr.indexOf(id)>=0;
 const add = (arr,id) => { if(!has(arr,id)) arr.push(id); };
 
@@ -623,6 +630,31 @@ RENDER.generate=(task,body)=>{
   btn.disabled=true; paint();
 };
 
+/* ---------------- SPOT (поймай галлюцинацию) ---------------- */
+RENDER.spot=(task,body)=>{
+  body.innerHTML=`<div class="spot-card">
+    ${task.prompt2?`<div class="spot-q">${task.prompt2}</div>`:""}
+    <div class="spot-ai">🤖 Ответ ИИ:</div>
+    <div class="spot-claims" id="spotClaims"></div></div>`;
+  const wrap=body.querySelector("#spotClaims"); const sel=new Set();
+  task.claims.forEach((c,i)=>{ const el=document.createElement("div"); el.className="spot-claim"; el.dataset.i=i;
+    el.innerHTML=`<span class="sc-dot"></span><span>${c.text}</span>`;
+    el.onclick=()=>{ if(wrap.classList.contains("locked"))return; el.classList.toggle("mark");
+      if(sel.has(i))sel.delete(i); else sel.add(i); btn.disabled=sel.size===0; };
+    wrap.appendChild(el); });
+  $("#task-hint").textContent="Отметь утверждение, которое ИИ выдумал, и проверь.";
+  const btn=checkButton("Проверить",()=>{
+    wrap.classList.add("locked"); let ok=0, total=0;
+    task.claims.forEach((c,i)=>{ const el=wrap.querySelector(`[data-i="${i}"]`);
+      if(c.false){ total++; if(sel.has(i)){ ok++; el.classList.add("good"); } else el.classList.add("missed"); }
+      else if(sel.has(i)){ el.classList.add("bad"); }
+      if(c.false && c.why) el.insertAdjacentHTML("beforeend",`<div class="spot-why">${c.why}</div>`);
+    });
+    gradeDone(task, ok, total);
+  });
+  btn.disabled=true;
+};
+
 /* ============================================================
    РЕЗУЛЬТАТ
 ============================================================ */
@@ -735,7 +767,7 @@ function buildTeacher(){
   });
   p.innerHTML=html;
 }
-function typeRu(t){ return {sort:"сортировка",axis:"шкала",order:"порядок",match:"пары",binary:"выбор",hotspot:"поиск",tokens:"токены",nextword:"вероятности",feed:"кормёжка сети",slider:"ползунок",train:"пульт · обучение",morph:"пульт · сигнал",generate:"пульт · генерация"}[t]||t; }
+function typeRu(t){ return {sort:"сортировка",axis:"шкала",order:"порядок",match:"пары",binary:"выбор",hotspot:"поиск",tokens:"токены",nextword:"вероятности",feed:"кормёжка сети",slider:"ползунок",train:"пульт · обучение",morph:"пульт · сигнал",generate:"пульт · генерация",spot:"поймай ошибку"}[t]||t; }
 
 /* ---------------- режим учителя (встроенная памятка) ---------------- */
 let teacherMode=false;
@@ -784,23 +816,37 @@ function toggleSound(){ const on=sfx.toggle(); const mb=$("#muteBtn"); if(mb) mb
    СТАРТ
 ============================================================ */
 function bootApp(){
-  // hud
+  loadLesson(0);
   refreshHud();
-  $("#xp").textContent=state.xp; $("#lvl").textContent=levelOf(state.xp);
-  $("#xpbar i").style.width=(state.xp%XP_PER_LEVEL/XP_PER_LEVEL*100)+"%";
-  // hero texts
   $("#hero-title").innerHTML=`Собери свой <span class="grad">ИИ</span>`;
-  $("#hero-lede").textContent="Без скучных лекций. Двигай, собирай, разбирайся — и через урок начни понимать ИИ насквозь.";
-  // bg net
+  $("#hero-lede").textContent="Без скучных лекций. Двигай, собирай, разбирайся — и шаг за шагом запусти собственный ИИ на ноуте.";
   bgNet($("#bgnet"));
-  // teacher mode (restore)
   teacherMode=loadTeacherMode(); applyTeacherUI();
-  // sound
   const mb=$("#muteBtn"); if(mb) mb.textContent = sfx.isOn()?"🔊":"🔇";
   document.addEventListener("pointerdown", ()=>sfx.unlock(), {passive:true});
-  document.addEventListener("click", e=>{ if(e.target.closest(".btn,.tbtn,.node:not(.lock),.bbtn,.pick")) sfx.click(); }, true);
+  document.addEventListener("click", e=>{ if(e.target.closest(".btn,.tbtn,.node:not(.lock),.bbtn,.pick,.lesson-card:not(.locked)")) sfx.click(); }, true);
 }
-function startCourse(){ buildMap(); }
-function restart(){ Object.assign(state, freshState()); save(); refreshHud(); toast("Прогресс сброшен"); go("hero"); }
+
+/* ---------------- хаб курса: список уроков ---------------- */
+function startCourse(){ renderLessons(); }
+function renderLessons(){
+  stopDemo(); stopTaskViz(); go("lessons"); $("#stepbar").classList.add("hidden");
+  const wrap=$("#lessons-list"); wrap.innerHTML="";
+  LESSONS.forEach((les,i)=>{
+    const id="l"+les.id, p=allProg[id]||{};
+    const total=les.missions.reduce((n,m)=>n+m.tasks.length,0);
+    const doneN=(p.doneTasks||[]).length, pct=total?Math.round(doneN/total*100):0;
+    const card=document.createElement("div"); card.className="lesson-card";
+    card.innerHTML=`<div class="lc-num">${les.code.replace(/\D/g,"")||(i+1)}</div>
+      <div class="lc-body"><div class="lc-title">${les.title}</div>
+        <div class="lc-sub">${les.subtitle||""}</div>
+        <div class="lc-bar"><i style="width:${pct}%"></i></div>
+        <div class="lc-meta">${p.badge?"🏅 пройден · ":""}${les.goal||""}</div></div>
+      <div class="lc-side"><span class="lc-ic">${p.badge?"🏅":"▶"}</span><small>${p.badge?"повторить":pct>0?pct+"%":"начать"}</small></div>`;
+    card.onclick=()=>{ loadLesson(i); refreshHud(); buildMap(); };
+    wrap.appendChild(card);
+  });
+}
+function restart(){ allProg["l"+L.id]=freshState(); state=allProg["l"+L.id]; save(); refreshHud(); toast("Прогресс урока сброшен"); buildMap(); }
 
 document.addEventListener("DOMContentLoaded", bootApp);

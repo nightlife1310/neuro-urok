@@ -146,5 +146,39 @@ window.DEMOS = (function(){
     return {stop(){}};
   }
 
-  return { neuralPlayground, tokenizer, predictor, localVsCloud };
+  /* ---------- 5. Температура: softmax-распределение перестраивается ---------- */
+  function temperature(box){
+    const words=[["точный",3.0],["ясный",2.2],["странный",1.2],["банановый",0.3],["фиолетовый",0.1]];
+    box.innerHTML=`<div class="temp-demo">
+      <div class="temp-prompt">«Дай мне <b>___</b> ответ»</div>
+      <div class="temp-bars" id="tempBars"></div>
+      <div class="slider-row"><span class="sl-label">🌡️ Температура</span>
+        <input type="range" min="1" max="20" step="1" value="7" id="tempSl"><span class="sl-val" id="tempVal">0.7</span></div>
+      <div class="temp-note" id="tempNote"></div>
+      <button class="gen-btn" id="tempPick">🎲 Выбрать слово</button>
+    </div>`;
+    const barsEl=box.querySelector("#tempBars");
+    function probs(T){ const xs=words.map(w=>Math.exp(w[1]/T)); const s=xs.reduce((a,b)=>a+b,0); return xs.map(x=>x/s); }
+    function draw(){
+      const T=(+box.querySelector("#tempSl").value)/10; box.querySelector("#tempVal").textContent=T.toFixed(1);
+      const p=probs(T);
+      barsEl.innerHTML=words.map((w,i)=>`<div class="temp-bar"><span class="tb-w">${w[0]}</span><span class="tb-track"><i style="width:${Math.round(p[i]*100)}%"></i></span><span class="tb-p">${Math.round(p[i]*100)}%</span></div>`).join("");
+      const note=box.querySelector("#tempNote");
+      note.textContent = T<=0.5?"низкая: лидер забирает почти всё — точно, но предсказуемо"
+        : T>=1.4?"высокая: даже маловероятные слова в игре — творчески, но рискованно"
+        : "средняя: баланс точности и разнообразия";
+      note.style.color = T<=0.5?"#5eead4":T>=1.4?"#fb7185":"#fbbf24";
+    }
+    box.querySelector("#tempSl").addEventListener("input",draw);
+    box.querySelector("#tempPick").onclick=()=>{
+      const T=(+box.querySelector("#tempSl").value)/10, p=probs(T); let r=Math.random(),acc=0,pick=0;
+      for(let i=0;i<p.length;i++){ acc+=p[i]; if(r<=acc){ pick=i; break; } }
+      [...barsEl.children].forEach((c,i)=>c.classList.toggle("picked",i===pick));
+      if(window.sfx)sfx.blip();
+    };
+    draw();
+    return {stop(){}};
+  }
+
+  return { neuralPlayground, tokenizer, predictor, localVsCloud, temperature };
 })();
