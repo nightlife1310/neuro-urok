@@ -684,6 +684,48 @@ RENDER.decide=(task,body)=>{
   $("#task-hint").textContent="Выбери решение — увидишь последствие.";
 };
 
+/* ---------------- BIASLAB (песочница: данные → поведение ИИ) ---------------- */
+RENDER.biaslab=(task,body)=>{
+  const groups=task.groups.map(g=>({...g}));
+  const merits=task.merits;
+  body.innerHTML=`<div class="panel">
+    <div class="report-head">песочница · данные → поведение</div>
+    <div class="lab-step"><b>1.</b> Задай данные: как часто этим группам одобряли заявки в прошлом</div>
+    <div class="sliders" id="blSliders"></div>
+    <button class="gen-btn" id="blTrain">🚀 Обучить ИИ на этих данных</button>
+    <div id="blResult" style="display:none;margin-top:6px">
+      <div class="lab-step"><b>2.</b> Новые заявки — теперь решает обученный ИИ. У всех одинаковые баллы!</div>
+      <div class="lab-apps" id="blApps"></div>
+      <div class="lab-verdict" id="blVerdict"></div>
+    </div></div>`;
+  const sl=body.querySelector("#blSliders");
+  groups.forEach((g,i)=>{ const row=document.createElement("div"); row.className="slider-row";
+    row.innerHTML=`<span class="sl-label" style="color:${g.color}">${g.label}</span><input type="range" min="0" max="100" step="5" value="${g.rate}" data-i="${i}"><span class="sl-val" data-v="${i}">${g.rate}%</span>`;
+    sl.appendChild(row); });
+  let trained=false;
+  sl.addEventListener("input",e=>{ const i=+e.target.dataset.i; groups[i].rate=+e.target.value;
+    body.querySelector(`[data-v="${i}"]`).textContent=e.target.value+"%"; if(trained) render(); });
+  body.querySelector("#blTrain").onclick=()=>{ trained=true; sfx.whoosh(); render(); body.querySelector("#blResult").scrollIntoView({block:"nearest"}); };
+  function render(){
+    body.querySelector("#blResult").style.display="";
+    const apps=body.querySelector("#blApps"); apps.innerHTML="";
+    groups.forEach(g=>{ merits.forEach(m=>{ const ok=m>=(100-g.rate);
+      const el=document.createElement("div"); el.className="applicant "+(ok?"ok":"no");
+      el.innerHTML=`<span class="ap-g" style="color:${g.color}">${g.short}</span><span class="ap-m">балл ${m}</span><span class="ap-d">${ok?"✅":"❌"}</span>`;
+      apps.appendChild(el); }); });
+    const rates=groups.map(g=>g.rate), spread=Math.max(...rates)-Math.min(...rates);
+    const v=body.querySelector("#blVerdict"); const low=groups.reduce((a,b)=>a.rate<b.rate?a:b);
+    if(spread<=15){ v.className="lab-verdict fair";
+      v.innerHTML="⚖️ Теперь ИИ судит всех одинаково — данные сбалансированы. <b>Вот так и добиваются справедливости.</b>"; btn.disabled=false; }
+    else { v.className="lab-verdict unfair";
+      v.innerHTML=`🚨 Заметил? Человек с баллом <b>${merits[merits.length-1]}</b> одобрен как «${groups[0].short}», но получает отказ как «${low.short}» — <b>при одинаковом балле</b>. ИИ просто скопировал перекос данных. <span class="lab-hint">Попробуй выровнять ползунки — и ИИ станет честным.</span>`;
+      btn.disabled=true; }
+  }
+  $("#task-hint").textContent="Это эксперимент, а не вопрос. Обучи, посмотри на несправедливость — потом сделай ИИ честным.";
+  const btn=checkButton("Готово ✓",()=>gradeDone(task,1,1,{participation:true,msg:"Ты сам это вызвал — ИИ зеркалит данные"}));
+  btn.disabled=true;
+};
+
 /* ---------------- ESTIMATE (оцени реальный масштаб, лог-ползунок) ---------------- */
 function fmtBig(n,unit){ let s; if(n>=1e12)s=(n/1e12).toFixed(n<1e13?1:0).replace(".0","")+" трлн";
   else if(n>=1e9)s=Math.round(n/1e9)+" млрд"; else if(n>=1e6)s=Math.round(n/1e6)+" млн";
@@ -857,7 +899,7 @@ function buildTeacher(){
   });
   p.innerHTML=html;
 }
-function typeRu(t){ return {sort:"сортировка",axis:"шкала",order:"порядок",match:"пары",binary:"выбор",hotspot:"поиск",tokens:"токены",nextword:"вероятности",feed:"кормёжка сети",slider:"ползунок",train:"пульт · обучение",morph:"пульт · сигнал",generate:"пульт · генерация",spot:"поймай ошибку",decide:"кейс-решение",estimate:"оцени масштаб",multi:"разбор · мультивыбор"}[t]||t; }
+function typeRu(t){ return {sort:"сортировка",axis:"шкала",order:"порядок",match:"пары",binary:"выбор",hotspot:"поиск",tokens:"токены",nextword:"вероятности",feed:"кормёжка сети",slider:"ползунок",train:"пульт · обучение",morph:"пульт · сигнал",generate:"пульт · генерация",spot:"поймай ошибку",decide:"кейс-решение",estimate:"оцени масштаб",multi:"разбор · мультивыбор",biaslab:"песочница"}[t]||t; }
 
 /* ---------------- режим учителя (встроенная памятка) ---------------- */
 let teacherMode=false;

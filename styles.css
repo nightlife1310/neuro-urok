@@ -319,6 +319,23 @@ body::after{width:54vw;height:54vw;bottom:-18vw;right:-14vw;background:radial-gr
 .db-v{font-family:'JetBrains Mono',monospace;font-size:12.5px;text-align:right;color:var(--on)}
 @media(max-width:430px){.db-row{grid-template-columns:96px 1fr 40px;gap:7px}.db-l{font-size:11px}}
 
+/* ---------------- BIASLAB (песочница) ---------------- */
+.lab-step{font-size:14px;color:var(--on-soft);margin:14px 0 10px;line-height:1.45}
+.lab-step b{color:var(--aqua);font-family:'Unbounded',sans-serif}
+.lab-apps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.applicant{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid var(--s-bd);
+  border-radius:11px;padding:10px 12px;font-size:12.5px;animation:rise .3s backwards}
+.applicant.ok{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.08)}
+.applicant.no{border-color:rgba(251,113,133,.4);background:rgba(251,113,133,.08)}
+.applicant .ap-g{font-weight:700}
+.applicant .ap-m{color:var(--on-soft);font-family:'JetBrains Mono',monospace;font-size:11px}
+.applicant .ap-d{margin-left:auto;font-size:15px}
+.lab-verdict{border-radius:13px;padding:14px 16px;font-size:13.5px;line-height:1.55;animation:rise .3s}
+.lab-verdict.unfair{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.4);color:#ffd0d6}
+.lab-verdict.fair{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:#bdf5dd}
+.lab-verdict .lab-hint{display:block;margin-top:7px;color:var(--gold);font-size:12.5px}
+@media(max-width:430px){.lab-apps{grid-template-columns:1fr}}
+
 /* ---------------- estimate: лог-линейка + сравнение ---------------- */
 .est-ruler{position:relative;height:20px;margin:4px 2px 0}
 .est-tick{position:absolute;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--on-dim);white-space:nowrap}
