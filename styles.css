@@ -319,6 +319,29 @@ body::after{width:54vw;height:54vw;bottom:-18vw;right:-14vw;background:radial-gr
 .db-v{font-family:'JetBrains Mono',monospace;font-size:12.5px;text-align:right;color:var(--on)}
 @media(max-width:430px){.db-row{grid-template-columns:96px 1fr 40px;gap:7px}.db-l{font-size:11px}}
 
+/* ---------------- CLASSIFIER (обучи распознавалку) ---------------- */
+.cls-step{font-size:14px;color:var(--on-soft);margin:14px 0 10px;line-height:1.45}
+.cls-step b{color:var(--aqua);font-family:'Unbounded',sans-serif}
+.cls-train{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+.cls-card{background:rgba(255,255,255,.04);border:1px solid var(--s-bd);border-radius:13px;padding:12px 14px;transition:.15s}
+.cls-card.done{border-color:rgba(94,234,212,.35)}
+.cls-msg{font-size:13.5px;line-height:1.4;margin-bottom:10px}
+.cls-btns{display:flex;gap:8px}
+.cls-lab{flex:1;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border-radius:9px;padding:8px;
+  background:rgba(255,255,255,.05);border:1px solid var(--s-bd);color:var(--on-soft);transition:.15s}
+.cls-lab:hover{border-color:var(--on-soft)}
+.cls-lab.ham.on{background:rgba(94,234,212,.18);border-color:var(--aqua);color:#d8fff7}
+.cls-lab.spam.on{background:rgba(251,113,133,.18);border-color:var(--bad);color:#ffd0d6}
+.cls-test{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.cls-trow{display:flex;align-items:center;gap:10px;border-radius:11px;padding:10px 12px;font-size:13px;border:1px solid var(--s-bd)}
+.cls-trow.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.35)}
+.cls-trow.no{background:rgba(251,113,133,.08);border-color:rgba(251,113,133,.35)}
+.cls-trow .ct-msg{flex:1;color:var(--on-soft)}
+.cls-trow .ct-pred{font-weight:600;white-space:nowrap}
+.cls-note{border-radius:13px;padding:13px 15px;font-size:13.5px;line-height:1.55;margin-top:4px}
+.cls-note.unfair{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.4);color:#ffe7ad}
+.cls-note.fair{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:#bdf5dd}
+
 /* ---------------- BIASLAB (песочница) ---------------- */
 .lab-step{font-size:14px;color:var(--on-soft);margin:14px 0 10px;line-height:1.45}
 .lab-step b{color:var(--aqua);font-family:'Unbounded',sans-serif}

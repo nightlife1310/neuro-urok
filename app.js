@@ -684,6 +684,61 @@ RENDER.decide=(task,body)=>{
   $("#task-hint").textContent="Выбери решение — увидишь последствие.";
 };
 
+/* ---------------- CLASSIFIER (обучи распознавалку на своих примерах) ---------------- */
+function clsTok(s){ return (s.toLowerCase().match(/[a-zа-яё0-9]+/gi)||[]).filter(w=>w.length>2); }
+RENDER.classifier=(task,body)=>{
+  const train=task.trainPool.map(m=>({...m})), test=task.testPool;
+  const labels=new Array(train.length).fill(null);   // 'spam' | 'ham' | null
+  body.innerHTML=`<div class="panel">
+    <div class="report-head">тренажёр · обучи модель</div>
+    <div class="cls-step"><b>1.</b> Размечай письма: модель будет учиться на ТВОИХ примерах</div>
+    <div class="cls-train" id="clsTrain"></div>
+    <button class="gen-btn" id="clsTrainBtn">🚀 Обучить модель (<span id="clsN">0</span> размечено)</button>
+    <div id="clsResult" style="display:none">
+      <div class="cls-step"><b>2.</b> Новые письма — теперь решает обученная модель</div>
+      <div class="cls-test" id="clsTest"></div>
+      <div class="gauge"><div class="gauge-track"><i class="gauge-fill" id="clsFill"></i><span class="gauge-mark" style="left:${task.goal||80}%"></span></div>
+        <div class="gauge-cap"><span>точность на новых письмах</span><b id="clsAcc">0%</b></div></div>
+      <div class="cls-note" id="clsNote"></div>
+    </div></div>`;
+  const tEl=body.querySelector("#clsTrain");
+  train.forEach((m,i)=>{ const c=document.createElement("div"); c.className="cls-card"; c.dataset.i=i;
+    c.innerHTML=`<div class="cls-msg">${m.t}</div><div class="cls-btns">
+      <button class="cls-lab ham" data-l="ham">📩 обычное</button><button class="cls-lab spam" data-l="spam">🚫 спам</button></div>`;
+    c.querySelectorAll(".cls-lab").forEach(b=>b.onclick=()=>{ labels[i]=b.dataset.l;
+      c.querySelectorAll(".cls-lab").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+      c.classList.add("done"); body.querySelector("#clsN").textContent=labels.filter(Boolean).length;
+      if(trained) run(); });
+    tEl.appendChild(c); });
+  let trained=false;
+  function model(){ const ws={}, wh={};
+    train.forEach((m,i)=>{ if(!labels[i])return; clsTok(m.t).forEach(w=>{ const o=labels[i]==="spam"?ws:wh; o[w]=(o[w]||0)+1; }); });
+    return {ws,wh}; }
+  function classify(text,mo){ let s=0; clsTok(text).forEach(w=>s+=(mo.ws[w]||0)-(mo.wh[w]||0)); return s>0?"spam":(s<0?"ham":"?"); }
+  function run(){
+    const mo=model(); body.querySelector("#clsResult").style.display="";
+    const tc=body.querySelector("#clsTest"); tc.innerHTML=""; let ok=0;
+    test.forEach(m=>{ const pred=classify(m.t,mo); const right=pred===(m.spam?"spam":"ham"); if(right)ok++;
+      const el=document.createElement("div"); el.className="cls-trow "+(right?"ok":"no");
+      el.innerHTML=`<span class="ct-msg">${m.t}</span><span class="ct-pred">${pred==="spam"?"🚫 спам":pred==="ham"?"📩 обычное":"🤷 не знаю"}</span>`;
+      tc.appendChild(el); });
+    const acc=Math.round(ok/test.length*100); const goal=task.goal||80;
+    const fill=body.querySelector("#clsFill"), accEl=body.querySelector("#clsAcc");
+    fill.style.width=acc+"%"; fill.style.background=acc>=goal?"linear-gradient(90deg,#34d399,#5eead4)":acc>=50?"linear-gradient(90deg,#fbbf24,#f59e0b)":"linear-gradient(90deg,#fb7185,#f43f5e)";
+    accEl.textContent=acc+"%"; accEl.style.color=acc>=goal?"#34d399":acc>=50?"#fbbf24":"#fb7185";
+    const n=labels.filter(Boolean).length;
+    const note=body.querySelector("#clsNote");
+    if(acc>=goal){ note.className="cls-note fair"; note.innerHTML="✅ Модель хорошо обобщает! Заметь: ты не писал правил — она <b>сама вывела признаки спама из твоих примеров</b>."; btn2.disabled=false; }
+    else { note.className="cls-note unfair"; note.innerHTML=`Размечено ${n} из ${train.length}. Модель ещё путается — <b>покорми её бОльшим числом примеров</b> (особенно тех типов, где ошиблась).`; btn2.disabled=true; }
+  }
+  body.querySelector("#clsTrainBtn").onclick=()=>{ const n=labels.filter(Boolean).length;
+    if(n<2){ toast("Размечай хотя бы пару писем"); return; } trained=true; sfx.whoosh(); run();
+    body.querySelector("#clsResult").scrollIntoView({block:"nearest"}); };
+  $("#task-hint").textContent="Размечай письма и обучай. Цель — чтобы модель сама верно угадывала новые.";
+  const btn2=checkButton("Готово ✓",()=>gradeDone(task,1,1,{participation:true,msg:"Ты обучил модель на своих данных!"}));
+  btn2.disabled=true;
+};
+
 /* ---------------- BIASLAB (песочница: данные → поведение ИИ) ---------------- */
 RENDER.biaslab=(task,body)=>{
   const groups=task.groups.map(g=>({...g}));
@@ -899,7 +954,7 @@ function buildTeacher(){
   });
   p.innerHTML=html;
 }
-function typeRu(t){ return {sort:"сортировка",axis:"шкала",order:"порядок",match:"пары",binary:"выбор",hotspot:"поиск",tokens:"токены",nextword:"вероятности",feed:"кормёжка сети",slider:"ползунок",train:"пульт · обучение",morph:"пульт · сигнал",generate:"пульт · генерация",spot:"поймай ошибку",decide:"кейс-решение",estimate:"оцени масштаб",multi:"разбор · мультивыбор",biaslab:"песочница"}[t]||t; }
+function typeRu(t){ return {sort:"сортировка",axis:"шкала",order:"порядок",match:"пары",binary:"выбор",hotspot:"поиск",tokens:"токены",nextword:"вероятности",feed:"кормёжка сети",slider:"ползунок",train:"пульт · обучение",morph:"пульт · сигнал",generate:"пульт · генерация",spot:"поймай ошибку",decide:"кейс-решение",estimate:"оцени масштаб",multi:"разбор · мультивыбор",biaslab:"песочница",classifier:"тренажёр модели"}[t]||t; }
 
 /* ---------------- режим учителя (встроенная памятка) ---------------- */
 let teacherMode=false;
